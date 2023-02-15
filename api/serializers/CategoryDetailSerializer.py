@@ -6,7 +6,7 @@ from api.serializers import ProductSerializer
 class ProductForCategorySerializer(serializers.ModelSerializer):
     class Meta:
         model = Product
-        fields = ['id', 'nom']
+        fields = ['id', 'nom', 'prix']
 
 
 class CategoryDetailSerializer(serializers.ModelSerializer):
@@ -24,7 +24,7 @@ class CategoryDetailSerializer(serializers.ModelSerializer):
         # d'entités dans la liste
 
         # On applique le filtre sur notre queryset pour n'avoir que les produits actifs
-        queryset = instance.products.filter(active=True)
+        queryset = instance.products.filter(active=True).order_by('-prix')
         # Le serializer est créé avec le queryset défini et toujours défini en tant que many=True
         serializer = ProductForCategorySerializer(queryset, many=True)
         # la propriété '.data' est le rendu de notre serializer que nous retournons ici

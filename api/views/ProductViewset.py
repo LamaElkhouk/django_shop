@@ -6,6 +6,7 @@ from api.models import Product
 class ProductViewset(ModelViewSet):
 
     serializer_class = ProductSerializer
+
     create_serializer_class = CreateProductSerializer
 
     def get_serializer_class(self):
@@ -15,7 +16,7 @@ class ProductViewset(ModelViewSet):
         return super().get_serializer_class()
 
     def get_queryset(self):
-        queryset = Product.objects.all()
+        queryset = Product.objects.all().order_by('-prix')
         category_id = self.request.GET.get('category_id')
         if category_id is not None:
             queryset = queryset.filter(category_id=category_id)
