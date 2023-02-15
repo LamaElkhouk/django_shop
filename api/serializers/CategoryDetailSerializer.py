@@ -1,9 +1,15 @@
-from api.models import Category
+from api.models import Category, Product
 from rest_framework import serializers
 from api.serializers import ProductSerializer
 
 
-class CategorySerializer(serializers.ModelSerializer):
+class ProductForCategorySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Product
+        fields = ['id', 'nom']
+
+
+class CategoryDetailSerializer(serializers.ModelSerializer):
     # En utilisant un `SerializerMethodField', il est nécessaire d'écrire une méthode
     # nommée 'get_XXX' où XXX est le nom de l'attribut, ici 'products'
     products = serializers.SerializerMethodField()
@@ -20,6 +26,6 @@ class CategorySerializer(serializers.ModelSerializer):
         # On applique le filtre sur notre queryset pour n'avoir que les produits actifs
         queryset = instance.products.filter(active=True)
         # Le serializer est créé avec le queryset défini et toujours défini en tant que many=True
-        serializer = ProductSerializer(queryset, many=True)
+        serializer = ProductForCategorySerializer(queryset, many=True)
         # la propriété '.data' est le rendu de notre serializer que nous retournons ici
         return serializer.data
